@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-
+// 파라미터를 추가한 Morse Code Generator 모듈
 module Morse_Code_Generator (SW, LEDR, Reset, Clk, Start);
     parameter Wait = 2'b00, Dot = 2'b01, Dash = 2'b10, End = 2'b11;
     input [2:0] SW;
