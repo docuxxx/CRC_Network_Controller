@@ -7,7 +7,7 @@
 오전 3:05 2025-11-29
 수정 내용 : 
 
-0. est mode에서 특정 비트 인버젼 후 CRC detect 시 송수신은 인버젼된 data로, CRC는 원본 data로 연산 수행하도록 수정
+0. Test mode에서 특정 비트 인버젼 후 CRC detect 시 송수신은 인버젼된 data로, CRC는 원본 data로 연산 수행하도록 수정
 
 1. CRC 에러 detect시 재입력 기능 추가에 대해
 
