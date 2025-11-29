@@ -37,9 +37,6 @@ module tx_controller_mouth (clk, rst_n, tx_start, tx_packet, tx_line, tx_busy, t
     reg crc_en;                 
     
     // [삭제됨] reg [7:0] crc_result_latch; <- 이제 필요 없음!
-
-    reg current_bit; //임시변수
-
     assign crc_in = shift_reg[127]; // 레지스터 맨 앞을 전선으로 바로 연결!
 
     // CRC 모듈 인스턴스
