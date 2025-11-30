@@ -36,12 +36,12 @@ module Rx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     end
 
     // 수신된 Payload의 LSB 1 byte 출력
-    hex_decoder h0 (.A(payload[3:0]), .HEX(HEX0));
-    hex_decoder h1 (.A(payload[7:4]), .HEX(HEX1));
+    hex_decoder Display0 (.A(payload[3:0]), .HEX(HEX0));
+    hex_decoder Display1 (.A(payload[7:4]), .HEX(HEX1));
 
     // dest_id, src_id 표시
-    hex_decoder h2 (.A({2'b00, dest_id}), .HEX(HEX2));
-    hex_decoder h3 (.A({2'b00, src_id }), .HEX(HEX3));
+    hex_decoder Display2 (.A({2'b00, dest_id}), .HEX(HEX2));
+    hex_decoder Display3 (.A({2'b00, src_id }), .HEX(HEX3));
 
     // 사용 안 하는 HEX 끄기
     assign HEX4 = 7'b1111111;
