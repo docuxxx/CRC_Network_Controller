@@ -12,6 +12,7 @@ module Tx (
     // =============================================================
     wire [135:0] w_packet;    // Assembler -> Transmitter (데이터 패킷)
     wire w_test_mode;         // Assembler -> Transmitter (에러 모드 플래그)
+    wire w_transmitter_rst_n; // [수정] Assembler에서 받아올 리셋 신호용 와이어
 
     // =============================================================
     // 1. 입력 레지스터 (Assembler) - 데이터 조립
@@ -26,11 +27,11 @@ module Tx (
     );
 
     // =============================================================
-    // 2. 송신기 (Mouth) - 전송 담당
+    // 2. 송신기 (transmitter) - 전송 담당
     // =============================================================
-    tx_transmitter u_mouth (
+    tx_transmitter u_transmitter (
         .clk        (CLOCK_50),        // [입력] 50MHz 시스템 클럭
-        .rst_n      (1'b1),            // [입력] 하드웨어 리셋 미사용 (Always High)
+        .rst_n      (w_transmitter_rst_n),   // [입력] 입력 레지스터 리셋 연결 
         .tx_start   (~KEY[1]),         // [입력] KEY1 누르면(Low->High) 전송 시작
         .tx_packet  (w_packet),        // [입력] Assembler에서 온 패킷
         .test_mode  (w_test_mode),     // [입력] Assembler에서 온 모드
