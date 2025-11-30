@@ -1,15 +1,6 @@
-// ============================================================================
-// 모듈: CRC-8 Serial (RX 전용 - 1비트씩 계산)
-// ============================================================================
 module crc8_serial (clk, rst_n, clear, data_in, enable, crc_out);
-    input wire clk; 
-    input wire rst_n; 
-    input wire clear; 
-    input wire data_in; 
-    input wire enable;
-    
+    input clk, rst_n, clear, data_in, enable; 
     output reg [7:0] crc_out;
-    
     wire feedback;
     // [수학 원리: 나눌 수 있는지 확인]
     // 현재 나머지(crc_out)의 맨 앞자리와 새 데이터가 충돌하는가?
