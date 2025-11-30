@@ -1,4 +1,4 @@
-module tx_input_register (load, mode, data, tx_packet, test_mode, flag_status);
+module tx_input_register (load, mode, data, tx_packet, test_mode, flag_status, rst_out_n);
 //                        key0,  sw9-8, sw7-0,                       LEDR0-1
 input load; // key0
 input [1:0] mode; //sw9-8, 00:reset,01:header,10:data,11:test mode
@@ -7,6 +7,9 @@ input [7:0] data; // input data
 output reg [135:0] tx_packet; // save data
 output reg test_mode; // sw98 00 이고 sw0이 1일때 
 output [1:0] flag_status;
+//mouth에 연결해줄 리셋 
+output wire rst_out_n;
+assign rst_out_n = ~((mode == 2'b00) && (load == 1'b0));
 
 reg [3:0] byte_ptr;//내부 변수
 reg [3:0] target_length;//몇바이트 받을지 
