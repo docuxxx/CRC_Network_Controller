@@ -116,7 +116,7 @@ module rx_receiver (clk, rst_n, rx_line, dest_id, src_id, payload, frame_valid, 
                     end
                 end
 
-                // 헤더 수신 + CRC 계산 시작
+                // 헤더 수신 
                 HEADER: begin  
 
                     header <= header_next;
