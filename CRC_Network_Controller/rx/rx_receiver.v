@@ -56,7 +56,7 @@ module rx_receiver (clk, rst_n, rx_line, dest_id, src_id, payload, frame_valid, 
     wire [7:0] crc_computed;
 
     // CRC 계산은 헤더와 페이로드 구간에서만 활성화
-    assign crc_enable = (state == HEADER) || (state == PAYLOAD);
+    assign crc_enable = (state == PAYLOAD);
 
     crc8_serial crc_recived (.clk(clk), .rst_n(rst_n), .clear(crc_clear), 
     .data_in(rx_line), .enable(crc_enable), .crc_out(crc_computed));
