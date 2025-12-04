@@ -112,7 +112,7 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, test_mode);
                 S_DATA:
                 begin
                     // 현재 비트 출력
-                    if (test_mode && (bit_cnt == 0))
+                    if (test_mode && (bit_cnt == 0) && S_DATA)
                         tx_line <= ~shift_reg[127];
                     else
                         tx_line <= shift_reg[127];
