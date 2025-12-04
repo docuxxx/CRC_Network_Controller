@@ -1,6 +1,6 @@
 // 모듈: TX Controller (Mouth) - 136비트 직접 인덱싱 및 실시간 CRC
 // 최종 수정: CRC Direct Indexing & Timing Fix 완료 
-module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, tx_busy, test_mode);
+module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, test_mode);
 
     input clk;
     input rst_n;
@@ -9,8 +9,7 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, tx_busy, test_m
     input [135:0] tx_packet;   // input_register에서 온 136비트 통 데이터
     input test_mode;           // 에러 주입 모드
 
-    output reg tx_line;      //전송선은 1비트니깐
-    output reg tx_busy;            
+    output reg tx_line;      //전송선은 1비트니깐      
 
     // 상태 정의
     parameter S_IDLE     = 3'b000;
@@ -60,7 +59,6 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, tx_busy, test_m
             shift_reg        <= 128'd0;
             
             tx_line          <= 1'b0;
-            tx_busy          <= 1'b0;
             
             // [삭제됨] crc_result_latch 초기화 삭제
             crc_clear        <= 1'b1;
@@ -76,14 +74,12 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, tx_busy, test_m
                 S_IDLE:
                 begin
                     tx_line <= 1'b0;
-                    tx_busy <= 1'b0;
                     bit_cnt <= 8'd0;
                     crc_clear <= 1'b1; 
 
                     if (tx_start)
                     begin
                         state      <= S_PREAMBLE;
-                        tx_busy    <= 1'b1;
                         
                         tx_header  <= tx_packet[135:128];
                         shift_reg  <= tx_packet[127:0];
@@ -151,7 +147,6 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, tx_busy, test_m
                     if (bit_cnt == 7)
                     begin
                         state   <= S_IDLE; // [수정됨] IDLE -> S_IDLE 로 오타 수정
-                        tx_busy <= 1'b0;
                         bit_cnt <= 0;
                     end
                     else bit_cnt <= bit_cnt + 1;
