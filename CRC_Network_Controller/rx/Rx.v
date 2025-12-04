@@ -1,10 +1,9 @@
 // Rx 탑 모듈
-module Rx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
+module Rx (KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
 
-    input CLOCK_50;
     input [1:0] KEY; // KEY0: Reset KEY1: 미지정 상태, 예비 key
     input [9:0] SW; // SW[9:8] = My ID
-    inout [35:0] GPIO; // GPIO[1] = Rx Line
+    inout [1:0] GPIO; // GPIO[1] = Rx Line
     output [9:0] LEDR;
     output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 
@@ -19,12 +18,12 @@ module Rx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     reg invalid_packet;
 
     // 수신기 - 시리얼 비트 수신 및 패킷
-    rx_receiver receiver (.clk(CLOCK_50), .rst_n(KEY[0]), .rx_line(GPIO[1]), 
+    rx_receiver receiver (.clk(GPIO[1]), .rst_n(KEY[0]), .rx_line(GPIO[0]), 
     .dest_id(dest_id), .src_id(src_id), .payload(payload), .frame_valid(frame_valid), 
     .crc_error(crc_error));
 
     // 목적지 ID 비교 (내 ID: SW[9:8])
-    always @(posedge CLOCK_50 or negedge KEY[0]) begin
+    always @(posedge GPIO[1] or negedge KEY[0]) begin
         if (!KEY[0])
             invalid_packet <= 1'b0;
         else if (frame_valid) begin
