@@ -2,7 +2,7 @@ module Tx (
     input CLOCK_50,
     input [1:0] KEY,        // KEY0: Load(Clk), KEY1: Send(Start)
     input [9:0] SW,         // SW[9:8]: Mode, SW[7:0]: Data
-    inout [35:0] GPIO,      // GPIO[1]: Tx Output line
+    inout GPIO,      // GPIO[1]: Tx Output line
     output [9:0] LEDR,      // Status LEDs
     output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5
 );
@@ -35,8 +35,7 @@ module Tx (
         .tx_start   (~KEY[1]),         // [입력] KEY1 누르면(Low->High) 전송 시작
         .tx_packet  (w_packet),        // [입력] Assembler에서 온 패킷
         .test_mode  (w_test_mode),     // [입력] Assembler에서 온 모드
-        .tx_line    (GPIO[1]),         // [출력] GPIO[1] 핀에 직접 꽂음 (Tx Line)
-        .tx_busy    (LEDR[3])          // [출력] LEDR[3] 핀에 직접 꽂음 (Busy)
+        .tx_line    (GPIO),         // [출력] GPIO[1] 핀에 직접 꽂음 (Tx Line)
     );
 
     // =============================================================
