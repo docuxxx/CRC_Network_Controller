@@ -45,7 +45,6 @@ always @(negedge load) begin
                 byte_ptr      <= 4'd0;           // 데이터 입력 포인터 초기화
 
                 flag_header_done <= 1; // 로드 버튼 누르면 헤더 설정 완료로 간주
-                flag_data_done   <= 0; //헤더를 다시 세팅하면 데이터는 초기화 되는게 맞으므로 
             end
 
             // [Mode 10] 데이터(Payload) 입력
@@ -77,7 +76,7 @@ always @(negedge load) begin
                     byte_ptr <= byte_ptr + 1;
                 end
 
-                if ((byte_ptr + 1) == target_length) 
+                if ((byte_ptr) == target_length) 
                 begin
                     flag_data_done <= 1; 
                 end
