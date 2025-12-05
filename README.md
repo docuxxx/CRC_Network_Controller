@@ -56,5 +56,5 @@ Term Project 진행 상황
 
 3. Tx ~ Rx bitstream 송신 시, timing 오류 발생 --> Tx 내부 CLK_50M를 GPIO pin을 사용하여 Rx로 공유(CLK sync 맞춤)
 
-4. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생
+4. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생 -->
    현재 debugging 중..
