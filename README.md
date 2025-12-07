@@ -2,6 +2,11 @@
 
 // 예비 보고서 내용 추가 예정 //
 
+2025-12-07
+수정 내용 :
+
+0. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생 --> tx_line code가 bit delay 유발 확인, 수정 후 해결 완료
+
 2025-12-04
 Term Project 진행 상황
 
@@ -57,7 +62,3 @@ case문으로 길이 지정해두고 fsm으로 길이 지정.
 모듈 내 구현된 CRC 알고리즘은 교안 속 8비트 동시 계산 방식이 아니라, 1비트씩 계산하는 형태이고
 쉽게 생각하면 binary convolution sum을 슬라이딩 윈도우해서 하는 거랑 같은 방식.
 
- 
-
-4. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생 -->
-   현재 debugging 중..
