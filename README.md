@@ -2,6 +2,19 @@
 
 // 예비 보고서 내용 추가 예정 //
 
+2025-12-04
+Term Project 진행 상황
+
+0. Tx payload register 저장 시, LEDR 반응 X --> byte_ptr과 target_length 조건문 수정 후, 해결 완료
+
+1. Tx CRC-8 계산 시 오류 발생 --> next_register 사용하여 최신 bit의 타이밍을 맞춰서 해결 완료
+
+2. Tx에서 bitstream 전송 시, reset 안됨 --> reset code 추가하여 해결 완료
+
+3. Tx ~ Rx bitstream 송신 시, timing 오류 발생 --> Tx 내부 CLK_50M를 GPIO pin을 사용하여 Rx로 공유(CLK sync 맞춤)
+
+
+
 오전 3:03 2025-12-01
 금일 회의 내용 : 역할 분담 및 rx 설계 예정
 0. rx 초본 완성 - 김준기
@@ -45,16 +58,6 @@ case문으로 길이 지정해두고 fsm으로 길이 지정.
 쉽게 생각하면 binary convolution sum을 슬라이딩 윈도우해서 하는 거랑 같은 방식.
 
  
-2025-12-04
-Term Project 진행 상황
-
-0. Tx payload register 저장 시, LEDR 반응 X --> byte_ptr과 target_length 조건문 수정 후, 해결 완료
-
-1. Tx CRC-8 계산 시 오류 발생 --> next_register 사용하여 최신 bit의 타이밍을 맞춰서 해결 완료
-
-2. Tx에서 bitstream 전송 시, reset 안됨 --> reset code 추가하여 해결 완료
-
-3. Tx ~ Rx bitstream 송신 시, timing 오류 발생 --> Tx 내부 CLK_50M를 GPIO pin을 사용하여 Rx로 공유(CLK sync 맞춤)
 
 4. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생 -->
    현재 debugging 중..
