@@ -101,10 +101,6 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, test_mode);
                     begin
                         state   <= S_DATA;
                         bit_cnt <= 0;
-                        
-                        // [수정 2] Data 구간의 첫 비트를 미리 내보냄 (1클럭 지연 방지)
-                        if (test_mode) tx_line <= ~shift_reg[127];
-                        else           tx_line <= shift_reg[127];
                     end
                     else bit_cnt <= bit_cnt + 1;
                 end
@@ -112,7 +108,7 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, test_mode);
                 S_DATA:
                 begin
                     // 현재 비트 출력
-                    if (test_mode && (bit_cnt == 0) && S_DATA)
+                    if (test_mode && (bit_cnt == 0))
                         tx_line <= ~shift_reg[127];
                     else
                         tx_line <= shift_reg[127];
@@ -125,9 +121,6 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, test_mode);
                     begin
                         state   <= S_CRC;
                         bit_cnt <= 0;
-                        
-                        // [수정 3] CRC 구간의 첫 비트를 미리 내보냄
-                        tx_line <= crc_calc[7];
                     end
                     else bit_cnt <= bit_cnt + 1;
                 end
