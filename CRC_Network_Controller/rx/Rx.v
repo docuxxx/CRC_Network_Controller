@@ -50,23 +50,23 @@ module Rx (KEY,CLK, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     // SW[3:0] 값에 따라 16바이트 중 하나를 선택 (Multiplexer)
     always @(*) begin
         case (SW[3:0])
-            4'd15:  display_byte = payload[127:120];  // 16번째 바이트 (MSB)
+                4'd15:  display_byte = payload[127:120];  // 16번째 바이트 (MSB)
 				4'd14:  display_byte = payload[119:112];
 				4'd13:  display_byte = payload[111:104];
 				4'd12:  display_byte = payload[103:96];
 				4'd11:  display_byte = payload[95:88];
 				4'd10:  display_byte = payload[87:80];
-				4'd9:  display_byte = payload[79:72];
-				4'd8:  display_byte = payload[71:64];
-				4'd7:  display_byte = payload[63:56];
-				4'd6:  display_byte = payload[55:48];
-				4'd5: display_byte = payload[47:40];
-				4'd4: display_byte = payload[39:32];
-				4'd3: display_byte = payload[31:24];
-				4'd2: display_byte = payload[23:16];
-				4'd1: display_byte = payload[15:8];
-				4'd0: display_byte = payload[7:0]; // 16번째 바이트 (MSB)
-            default: display_byte = 8'h00;
+				4'd9:   display_byte = payload[79:72];
+				4'd8:   display_byte = payload[71:64];
+				4'd7:   display_byte = payload[63:56];
+				4'd6:   display_byte = payload[55:48];
+				4'd5:   display_byte = payload[47:40];
+				4'd4:   display_byte = payload[39:32];
+				4'd3:   display_byte = payload[31:24];
+				4'd2:   display_byte = payload[23:16];
+				4'd1:   display_byte = payload[15:8];
+				4'd0:   display_byte = payload[7:0]; // 1번째 바이트 (LSB)
+            default:    display_byte = 8'h00;
         endcase
     end
 
