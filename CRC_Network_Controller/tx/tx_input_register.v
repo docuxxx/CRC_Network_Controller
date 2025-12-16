@@ -83,7 +83,6 @@ always @(negedge load) begin
             end
 
             // [Mode 11] 테스트 모드 설정
-            // SW[0]이 1이면 에러 모드 활성화 (Mouth에게 알림)
             2'b11: 
             begin
                 test_mode <= 1; 
