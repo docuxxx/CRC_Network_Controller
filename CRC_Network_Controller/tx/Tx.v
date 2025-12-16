@@ -3,14 +3,14 @@ module Tx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     input CLOCK_50;
     input [1:0] KEY;
     input [9:0] SW;
-    inout [1:0] GPIO;
+    inout GPIO;
     output [9:0] LEDR;
     output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 
     wire [135:0] w_packet;
     wire w_test_mode;
     wire w_transmitter_rst_n;
-	 assign GPIO[1] = CLOCK_50;
+	
 
     tx_input_register u_assembler (
         .load       (KEY[0]),
@@ -28,7 +28,7 @@ module Tx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
         .tx_start   (~KEY[1]),
         .tx_packet  (w_packet),
         .test_mode  (w_test_mode),
-        .tx_line    (GPIO[0])
+        .tx_line    (GPIO)
     );
 
     hex_decoder h0 (.A(SW[3:0]), .HEX(HEX0));
@@ -40,6 +40,7 @@ module Tx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     assign HEX4 = 7'b1111111;
 
     assign LEDR[2] = 1'b0;
-    assign LEDR[9:4] = 6'd0;
+    assign LEDR[8:4] = 5'd0;
+	 assign LEDR[9] = w_test_mode;
 
 endmodule
