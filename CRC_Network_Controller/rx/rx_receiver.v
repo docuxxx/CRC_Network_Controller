@@ -109,12 +109,12 @@ module rx_receiver (clk, rst_n, rx_line, dest_id, src_id, payload, frame_valid, 
                     sfd_shift <= sfd_shift_next;
 
                     if (sfd_shift_next == SFD_PATTERN) begin
-                        state   <= HEADER;
+                        state <= HEADER;
                         bit_cnt <= 3'd0;
-                        header  <= 8'd0;
+                        header <= 8'd0;
                         end
                     else if (sfd_shift_next == PREAMBLE_PATTERN[7:0]) begin
-                        state           <= WAIT_PREAMBLE;
+                        state <= WAIT_PREAMBLE;
                         preamble_shift  <= {8'd0, sfd_shift_next};
                         end
                     else begin
