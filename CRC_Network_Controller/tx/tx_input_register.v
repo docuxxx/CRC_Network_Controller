@@ -10,10 +10,10 @@ output [1:0] flag_status;
 output wire rst_out_n;
 assign rst_out_n = ~((mode == 2'b00) && (load == 1'b0));
 
-reg [3:0] byte_ptr;//내부 변수
-reg [3:0] target_length;//몇바이트 받을지 
+reg [3:0] byte_ptr; //내부 변수
+reg [3:0] target_length; //몇바이트 받을지 
 
-reg flag_header_done;//상태 확인용 LEDR1
+reg flag_header_done; //상태 확인용 LEDR1
 reg flag_data_done;  //상태 확인용 LEDR0
 
 assign flag_status[1] = flag_header_done; // 헤더 저장되면 켜짐
@@ -24,12 +24,12 @@ always @(negedge load) begin
             // [Mode 00] 리셋
             2'b00: 
             begin
-                tx_packet        <= 136'd0;
-                byte_ptr         <= 4'd0;
-                target_length    <= 4'd0;
-                test_mode        <= 1'b0;
+                tx_packet <= 136'd0;
+                byte_ptr <= 4'd0;
+                target_length <= 4'd0;
+                test_mode <= 1'b0;
                 flag_header_done <= 0;
-                flag_data_done   <= 0;
+                flag_data_done <= 0;
             end
 
             // [Mode 01] 헤더 설정
@@ -41,7 +41,7 @@ always @(negedge load) begin
                 tx_packet[131:128] <= data[3:0]; // Payload Length
                 
                 target_length <= data[3:0];      // 길이 저장 (참고용)
-                byte_ptr      <= 4'd0;           // 데이터 입력 포인터 초기화
+                byte_ptr <= 4'd0;           // 데이터 입력 포인터 초기화
 
                 flag_header_done <= 1; // 로드 버튼 누르면 헤더 설정 완료로 간주
             end
@@ -54,19 +54,19 @@ always @(negedge load) begin
                     4'd0:  tx_packet[127:120] <= data;
                     4'd1:  tx_packet[119:112] <= data;
                     4'd2:  tx_packet[111:104] <= data;
-                    4'd3:  tx_packet[103:96]  <= data;
-                    4'd4:  tx_packet[95:88]   <= data;
-                    4'd5:  tx_packet[87:80]   <= data;
-                    4'd6:  tx_packet[79:72]   <= data;
-                    4'd7:  tx_packet[71:64]   <= data;
-                    4'd8:  tx_packet[63:56]   <= data;
-                    4'd9:  tx_packet[55:48]   <= data;
-                    4'd10: tx_packet[47:40]   <= data;
-                    4'd11: tx_packet[39:32]   <= data;
-                    4'd12: tx_packet[31:24]   <= data;
-                    4'd13: tx_packet[23:16]   <= data;
-                    4'd14: tx_packet[15:8]    <= data;
-                    4'd15: tx_packet[7:0]     <= data;
+                    4'd3:  tx_packet[103:96] <= data;
+                    4'd4:  tx_packet[95:88] <= data;
+                    4'd5:  tx_packet[87:80] <= data;
+                    4'd6:  tx_packet[79:72] <= data;
+                    4'd7:  tx_packet[71:64] <= data;
+                    4'd8:  tx_packet[63:56] <= data;
+                    4'd9:  tx_packet[55:48] <= data;
+                    4'd10: tx_packet[47:40] <= data;
+                    4'd11: tx_packet[39:32] <= data;
+                    4'd12: tx_packet[31:24] <= data;
+                    4'd13: tx_packet[23:16] <= data;
+                    4'd14: tx_packet[15:8] <= data;
+                    4'd15: tx_packet[7:0] <= data;
                 endcase
 
                 // 포인터 증가 (최대 16바이트 넘지 않도록)

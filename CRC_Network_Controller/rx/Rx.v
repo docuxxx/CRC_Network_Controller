@@ -1,10 +1,10 @@
 // Rx 탑 모듈
-module Rx (KEY, CLK, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
+module Rx (KEY, CLOCK_50, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
 
     input [1:0] KEY;      // KEY0: Reset, KEY1: 예비
     input [9:0] SW;       // SW[9:8]: My ID, SW[3:0]: Payload Byte Selector
     input CLOCK_50;
-    inout GPIO;     // GPIO[1]: Rx Clock, GPIO[0]: Rx Data
+    inout GPIO;   
     output [9:0] LEDR;
     output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 
@@ -21,7 +21,7 @@ module Rx (KEY, CLK, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     reg [4:0] clk_divide;
     always @(posedge CLOCK_50)
         clk_divide <= clk_divide + 1;
-    // [중요] 사용자의 요청대로 클럭 부분은 GPIO[1] 그대로 유지
+
     rx_receiver receive (.clk(clk_divde[4]), .rst_n(KEY[0]), .rx_line(GPIO), .dest_id(dest_id), .src_id(src_id), 
      .payload(payload), .frame_valid(frame_valid), .crc_error(crc_error));
 
@@ -70,7 +70,7 @@ module Rx (KEY, CLK, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
 
     // dest_id, src_id 표시
     hex_decoder Display2 (.A({2'b00, dest_id}), .HEX(HEX2));
-    hex_decoder Display3 (.A({2'b00, src_id }), .HEX(HEX3));
+    hex_decoder Display3 (.A({2'b00, src_id}), .HEX(HEX3));
 
     // 사용 안 하는 HEX 끄기
     assign HEX4 = 7'b1111111;
