@@ -4,7 +4,7 @@ module Rx (KEY, CLOCK_50, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     input [1:0] KEY;      // KEY0: Reset, KEY1: 예비
     input [9:0] SW;       // SW[9:8]: My ID, SW[3:0]: Payload Byte Selector
     input CLOCK_50;
-    inout GPIO;   
+    inout GPIO;    
     output [9:0] LEDR;
     output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 
@@ -14,16 +14,22 @@ module Rx (KEY, CLOCK_50, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     wire [127:0] payload;
     wire frame_valid;
     wire crc_error;
-
+	 reg [15:0] clk_div;
+	 always @(posedge CLOCK_50)
+		clk_div <= clk_div +1;
     // 목적지 ID 불일치 표시
     reg invalid_packet;
 
-    reg [4:0] clk_divide;
-    always @(posedge CLOCK_50)
-        clk_divide <= clk_divide + 1;
-
-    rx_receiver receive (.clk(clk_divde[4]), .rst_n(KEY[0]), .rx_line(GPIO), .dest_id(dest_id), .src_id(src_id), 
-     .payload(payload), .frame_valid(frame_valid), .crc_error(crc_error));
+    rx_receiver receiver (
+        .clk(clk_div[4]), 
+        .rst_n(KEY[0]), 
+        .rx_line(GPIO), 
+        .dest_id(dest_id), 
+        .src_id(src_id), 
+        .payload(payload), 
+        .frame_valid(frame_valid), 
+        .crc_error(crc_error)
+    );
 
     // 목적지 ID 비교
     always @(posedge CLOCK_50 or negedge KEY[0]) begin
@@ -37,29 +43,27 @@ module Rx (KEY, CLOCK_50, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
         end
     end
 
+    reg [7:0] display_byte; // 선택된 1바이트를 담을 변수
 
-    // 선택된 1바이트를 담을 변수
-    reg [7:0] display_byte; 
-
-    // SW[3:0] 값에 따라 16바이트 중 하나를 선택 (Mux)
+    // SW[3:0] 값에 따라 16바이트 중 하나를 선택 (Multiplexer)
     always @(*) begin
         case (SW[3:0])
-                4'd15: display_byte = payload[127:120];  // 16번째 바이트 (MSB)
-				4'd14: display_byte = payload[119:112];
-				4'd13: display_byte = payload[111:104];
-				4'd12: display_byte = payload[103:96];
-				4'd11: display_byte = payload[95:88];
-				4'd10: display_byte = payload[87:80];
-				4'd9: display_byte = payload[79:72];
-				4'd8: display_byte = payload[71:64];
-				4'd7: display_byte = payload[63:56];
-				4'd6: display_byte = payload[55:48];
+            4'd15 display_byte = payload[127:120]; 
+				4'd14:  display_byte = payload[119:112];
+				4'd13:  display_byte = payload[111:104];
+				4'd12:  display_byte = payload[103:96];
+				4'd11:  display_byte = payload[95:88];
+				4'd10:  display_byte = payload[87:80];
+				4'd9:  display_byte = payload[79:72];
+				4'd8:  display_byte = payload[71:64];
+				4'd7:  display_byte = payload[63:56];
+				4'd6:  display_byte = payload[55:48];
 				4'd5: display_byte = payload[47:40];
 				4'd4: display_byte = payload[39:32];
 				4'd3: display_byte = payload[31:24];
 				4'd2: display_byte = payload[23:16];
 				4'd1: display_byte = payload[15:8];
-				4'd0: display_byte = payload[7:0]; // 1번째 바이트 (LSB)
+				4'd0: display_byte = payload[7:0]; 
             default: display_byte = 8'h00;
         endcase
     end
@@ -70,7 +74,7 @@ module Rx (KEY, CLOCK_50, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
 
     // dest_id, src_id 표시
     hex_decoder Display2 (.A({2'b00, dest_id}), .HEX(HEX2));
-    hex_decoder Display3 (.A({2'b00, src_id}), .HEX(HEX3));
+    hex_decoder Display3 (.A({2'b00, src_id }), .HEX(HEX3));
 
     // 사용 안 하는 HEX 끄기
     assign HEX4 = 7'b1111111;

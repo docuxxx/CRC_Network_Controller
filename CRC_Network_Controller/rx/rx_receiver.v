@@ -113,13 +113,6 @@ module rx_receiver (clk, rst_n, rx_line, dest_id, src_id, payload, frame_valid, 
                         bit_cnt <= 3'd0;
                         header <= 8'd0;
                         end
-                    else if (sfd_shift_next == PREAMBLE_PATTERN[7:0]) begin
-                        state <= WAIT_PREAMBLE;
-                        preamble_shift  <= {8'd0, sfd_shift_next};
-                        end
-                    else begin
-                        state <= WAIT_PREAMBLE;
-                    end
                 end     
                 // 헤더 수신 
                 HEADER: begin  
