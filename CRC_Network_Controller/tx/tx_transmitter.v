@@ -88,7 +88,7 @@ module tx_transmitter (clk, rst_n, tx_start, tx_packet, tx_line, test_mode);
                     bit_cnt   <= 8'd0;
                     crc_clear <= 1'b1; 
 
-                    if (tx_start)
+                    if (!tx_start)
                     begin
                         state <= S_PREAMBLE;
                         
