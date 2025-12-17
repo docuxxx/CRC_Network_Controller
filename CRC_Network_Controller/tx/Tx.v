@@ -10,7 +10,7 @@ module Tx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     wire [135:0] w_packet;
     wire w_test_mode;
     wire w_transmitter_rst_n;
-	reg [2:0] clk_divide;
+	reg [4:0] clk_divide;
     always @(posedge CLOCK_50)
         clk_divide <= clk_divide + 1;
 
@@ -18,7 +18,7 @@ module Tx (CLOCK_50, KEY, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     .tx_packet(w_packet), .test_mode(w_test_mode),
     .flag_status(LEDR[1:0]), .rst_out_n(w_transmitter_rst_n));
 
-    tx_transmitter u_transmitter ( .clk(clk_divide[2]), .rst_n(w_transmitter_rst_n), 
+    tx_transmitter u_transmitter ( .clk(clk_divide[4]), .rst_n(w_transmitter_rst_n), 
     .tx_start(KEY[1]), .tx_packet(w_packet), .test_mode(w_test_mode),
     .tx_line(GPIO));
 

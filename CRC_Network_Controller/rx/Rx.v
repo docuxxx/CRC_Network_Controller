@@ -18,11 +18,11 @@ module Rx (KEY, CLK, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     // 목적지 ID 불일치 표시
     reg invalid_packet;
 
-    reg [2:0] clk_divide;
+    reg [4:0] clk_divide;
     always @(posedge CLOCK_50)
         clk_divide <= clk_divide + 1;
     // [중요] 사용자의 요청대로 클럭 부분은 GPIO[1] 그대로 유지
-    rx_receiver receive (.clk(clk_divde[2]), .rst_n(KEY[0]), .rx_line(GPIO), .dest_id(dest_id), .src_id(src_id), 
+    rx_receiver receive (.clk(clk_divde[4]), .rst_n(KEY[0]), .rx_line(GPIO), .dest_id(dest_id), .src_id(src_id), 
      .payload(payload), .frame_valid(frame_valid), .crc_error(crc_error));
 
     // 목적지 ID 비교
