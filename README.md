@@ -1,5 +1,7 @@
 2025 하반기 디지털시스템설계 텀프로젝트 주제로, CRC 오류 체크 알고리즘 기반의 Network Controller 설계를 목표로 한다. 
 
+
+
 2025-12-17
 
 16bit clock_divide register 구현에서 최소 크기 5bit register로 축소 및 cost 최소화
@@ -10,6 +12,8 @@ Testbench clock 신호 clock_divide로 수정 완료
 최종 구현 완료 및 최적화 완료.
 
 
+
+
 2025-12-15 
 최종 보드 Test 중 clock divide 필요성 확인
 
@@ -18,6 +22,9 @@ Counter를 활용한 clock 신호 분주로 clock 속도 낮춤.
 보드 동작 성공, 이후 최소 크기 register 사용으로 구현 필요. 
 
 Testbench 수정 동시 작업. 
+
+
+
 
 
 2025-12-14
@@ -44,15 +51,22 @@ Test case
 위 case로 Test 성공 
 Ideal한 상태이므로 보드 동작과 다를 수 있음을 유의. 
 
+
+
 2025-12-11
 
 최종 구현 성공 (보드 클럭 동작 및 tx - nextshift 형태로 수정)
 cost 최소화를 위한 리팩토링 필요 
 
+
+
 2025-12-07
 수정 내용 :
 
 0. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생 --> tx_line code가 bit delay 유발 확인, 수정 후 해결 완료
+
+
+
 
 2025-12-04
 Term Project 진행 상황
