@@ -1,6 +1,50 @@
 2025 하반기 디지털시스템설계 텀프로젝트 주제로, CRC 오류 체크 알고리즘 기반의 Network Controller 설계를 목표로 한다. 
 
-2025-12-13
+2025-12-17
+
+16bit clock_divide register 구현에서 최소 크기 5bit register로 축소 및 cost 최소화
+이에따른 보드 동작 성공
+
+Testbench clock 신호 clock_divide로 수정 완료
+
+최종 구현 완료 및 최적화 완료.
+
+
+2025-12-15 
+최종 보드 Test 중 clock divide 필요성 확인
+
+Counter를 활용한 clock 신호 분주로 clock 속도 낮춤. 
+
+보드 동작 성공, 이후 최소 크기 register 사용으로 구현 필요. 
+
+Testbench 수정 동시 작업. 
+
+
+2025-12-14
+
+Tx-Rx testbench 작성 중 (13시 ~)
+
+Test case 
+
+Test용 DUT는 시작 버튼이 따로 존재x 
+Tx_line 자체가 Rx_line과 연결되기에 항상 데이터를 전송하고 있는 상태
+
+1. Normal mode 1byte 전송
+2. Test mode ㅡMSB Inversion (1Byte)
+3. My_id, Dest_id inccorrect -> invalid packet case
+위 case로 Test 예정.
+
+Testbench 작성 완료 (02시)
+
+Test case 
+1. Normal mode 1byte 전송
+2. Test mode ㅡMSB Inversion (1Byte) 
+3. My_id, Dest_id inccorrect -> invalid packet case\
+   
+위 case로 Test 성공 
+Ideal한 상태이므로 보드 동작과 다를 수 있음을 유의. 
+
+2025-12-11
 
 최종 구현 성공 (보드 클럭 동작 및 tx - nextshift 형태로 수정)
 cost 최소화를 위한 리팩토링 필요 
