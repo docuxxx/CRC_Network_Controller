@@ -14,9 +14,9 @@ module Rx (KEY, CLOCK_50, SW, GPIO, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     wire [127:0] payload;
     wire frame_valid;
     wire crc_error;
-	 reg [4:0] clk_div;
-	 always @(posedge CLOCK_50)
-		clk_div <= clk_div +1;
+	reg [4:0] clk_div;
+	always @(posedge CLOCK_50)
+	    clk_div <= clk_div +1;
     // 목적지 ID 불일치 표시
     reg invalid_packet;
 
