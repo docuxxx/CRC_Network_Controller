@@ -7,54 +7,39 @@ module tb_top;
 
     initial begin
         clk = 0;
-        forever #10 clk = ~clk;   // 50MHz
+        forever #10 clk = ~clk;
     end
 
     initial begin
         rst_n = 0;
-        #50;
-        rst_n = 1;
+        #50 rst_n = 1;
     end
 
+    reg [4:0] clk_divide;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) clk_divide <= 5'd0;
+        else        clk_divide <= clk_divide + 1'b1;
+    end
 
-    // ID 조건
-    localparam [1:0] TX_ID = 2'b10;
-    localparam [1:0] RX_ID = 2'b11;
+    localparam [1:0] RX_ID = 2'b10;
 
-    // header
-    // destination=11, source=10, length=0000 => 1110_0000 = 8'hE0
-    localparam [7:0] HEADER_E0 = 8'hE0;
+    localparam [7:0] HEADER_OK      = 8'hB0;
+    localparam [7:0] HEADER_INVALID = 8'h70;
+    localparam [7:0] PAYLOAD_57     = 8'h57;
 
-    // destination 불일치 : destination=01, source=10, length=0000 => 0110_0000 = 8'h60
-    localparam [7:0] HEADER_60 = 8'h60;
-
-    // TX 
     reg         tx_start;
     reg [135:0] tx_packet;
     reg         test_mode;
     wire        tx_line;
 
-    // RX
     wire [1:0]   rx_dest_id;
     wire [1:0]   rx_src_id;
     wire [127:0] rx_payload;
     wire         frame_valid;
     wire         crc_error;
 
-    // invalid_packet
-    reg invalid_packet;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
-            invalid_packet <= 1'b0;
-        else if (frame_valid) begin
-            if (rx_dest_id != RX_ID) invalid_packet <= 1'b1;
-            else                     invalid_packet <= 1'b0;
-        end
-    end
-
-    // DUTs
     tx_transmitter u_tx (
-        .clk       (clk),
+        .clk       (clk_divide[4]),
         .rst_n     (rst_n),
         .tx_start  (tx_start),
         .tx_packet (tx_packet),
@@ -63,66 +48,75 @@ module tb_top;
     );
 
     rx_receiver u_rx (
-        .clk        (clk),
-        .rst_n      (rst_n),
-        .rx_line    (tx_line),
-        .dest_id    (rx_dest_id),
-        .src_id     (rx_src_id),
-        .payload    (rx_payload),
-        .frame_valid(frame_valid),
-        .crc_error  (crc_error)
+        .clk         (clk_divide[4]),
+        .rst_n       (rst_n),
+        .rx_line     (tx_line),
+        .dest_id     (rx_dest_id),
+        .src_id      (rx_src_id),
+        .payload     (rx_payload),
+        .frame_valid (frame_valid),
+        .crc_error   (crc_error)
     );
 
-    // 프레임 전송 task
-    task send_frame_bytes;
-        input [7:0] header_byte;      
-        input [7:0] first_data_byte;
-        input       tmode;
+    // ======================================================
+    // INVALID PACKET (단순 / 확실 / 정석)
+    // ======================================================
+    wire invalid_packet;
+    assign invalid_packet = frame_valid && (rx_dest_id != RX_ID);
 
-        reg prev_fv, prev_ce;
-        integer timeout;
-        begin
-            prev_fv = frame_valid;
-            prev_ce = crc_error;
+    // ======================================================
+    // (옵션) 관찰용 snapshot – 굳이 안 써도 됨
+    // ======================================================
+    reg [127:0] rx_payload_snap;
+    reg         crc_error_snap;
 
-            tx_packet = {header_byte, {first_data_byte, 120'd0}};
-            test_mode = tmode;
-
-            // start 1clock pulse
-            @(posedge clk); tx_start = 1'b1;
-            @(posedge clk); tx_start = 1'b0;
-
-            // 결과 플래그 변화 대기
-            timeout = 0;
-            while (((frame_valid == prev_fv) && (crc_error == prev_ce)) && (timeout < 20000)) begin
-                @(posedge clk);
-                timeout = timeout + 1;
-            end
-            repeat(10) @(posedge clk);
+    always @(posedge clk_divide[4] or negedge rst_n) begin
+        if (!rst_n) begin
+            rx_payload_snap <= 0;
+            crc_error_snap  <= 0;
+        end else if (frame_valid) begin
+            rx_payload_snap <= rx_payload;
+            crc_error_snap  <= crc_error;
         end
-    endtask
+    end
 
-
+    // ======================================================
     // Test sequence
+    // ======================================================
     initial begin
         tx_start  = 0;
-        tx_packet = 0;
         test_mode = 0;
+        tx_packet = 0;
 
         @(posedge rst_n);
-        repeat(5) @(posedge clk);
 
-        // 1) 정상 프레임
+        // CASE 1: NORMAL
+        tx_packet = {HEADER_OK, {PAYLOAD_57, 120'd0}};
+        #50_000;
+        tx_start = 1;
+        #1_000;
+        tx_start = 0;
+        #200_000;
 
-        send_frame_bytes(HEADER_E0, 8'h57, 1'b0);
+        // CASE 2: CRC ERROR
+        tx_packet = {HEADER_OK, {PAYLOAD_57, 120'd0}};
+        test_mode = 1;
+        #50_000;
+        tx_start = 1;
+        #1_000;
+        tx_start = 0;
+        #100_000;
+        test_mode = 0;
+        #200_000;
 
-        // 2) test_mode 프레임
-        send_frame_bytes(HEADER_E0, 8'h57, 1'b1); 
+        // CASE 3: INVALID PACKET
+        tx_packet = {HEADER_INVALID, {PAYLOAD_57, 120'd0}};
+        #50_000;
+        tx_start = 1;
+        #1_000;
+        tx_start = 0;
+        #200_000;
 
-        // 3) invalid_packet
-        send_frame_bytes(HEADER_60, 8'h57, 1'b0);
-
-        #200;
         $stop;
     end
 
