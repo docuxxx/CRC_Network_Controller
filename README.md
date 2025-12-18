@@ -64,7 +64,7 @@ cost 최소화를 위한 리팩토링 필요
 수정 내용 :
 
 0. Test Mode 시, Tx에서 전송한 Data의 CRC-8 값이 Rx의 HEX로 표현되는 오류 발생 --> tx_line code가 bit delay 유발 확인, 수정 후 해결 완료
-
+1. Tx 모듈 Tx_Next_state register로 수정 (실시간 반영을 위한)
 
 
 
